@@ -315,9 +315,10 @@
 
     function shareApp(platform) {
         if(platform === 'tg') {
-            window.open(`tg://msg`, '_blank');
+            window.location.href = "tg://msg";
         } else {
-            window.open(`viber://forward`, '_blank');
+            // Viber link ကို အလုပ်လုပ်ဆုံး ပုံစံပြောင်းလိုက်ပါတယ်
+            window.location.href = "viber://forward";
         }
         closeShareModal();
     }
