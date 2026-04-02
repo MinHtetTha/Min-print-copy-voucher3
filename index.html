@@ -33,21 +33,34 @@
         .summary-box { background: #fff9f2; padding: 15px; border-radius: 12px; border: 1.5px solid #ffd8a8; }
         .grand-total { font-size: 1.5rem; font-weight: bold; color: #d35400; text-align: center; margin-top: 5px; }
 
-        /* Overlay & Voucher Card Settings */
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; padding: 15px; }
-        
+        /* Overlay & Voucher Card */
+        .overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.85); 
+            z-index: 1000; 
+            justify-content: center; 
+            align-items: center; 
+            padding: 15px;
+            overflow-y: auto; /* ပစ္စည်းများရင် Scroll ဆွဲနိုင်ရန် */
+        }
+
+        /* Voucher Card - Fixed Image Area */
         .voucher-card { 
             background: white; 
             width: 350px; 
-            height: 580px; /* Voucher အရွယ်အစားကို ပုံသေထားခြင်း */
+            height: 580px; 
             border-radius: 10px; 
             position: relative; 
-            overflow: hidden; 
-            display: flex;
-            flex-direction: column;
+            overflow: hidden;
+            flex-shrink: 0;
         }
 
-        .close-v { position: absolute; top: 5px; right: 10px; color: #888; font-size: 1.5rem; cursor: pointer; z-index: 10; }
+        .close-v { 
+            position: absolute; top: 10px; right: 15px; 
+            color: #888; font-size: 1.8rem; cursor: pointer; z-index: 100;
+        }
         
         #vCapture { 
             padding: 20px; 
@@ -59,9 +72,9 @@
         }
 
         .v-header { text-align: center; border-bottom: 2px dashed #FF7F00; padding-bottom: 10px; margin-bottom: 10px; }
-        .v-logo { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; margin-bottom: 5px; border: 2px solid #FF7F00; }
+        .v-logo { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #FF7F00; margin-bottom: 5px; }
         
-        .v-table { width: 100%; border-collapse: collapse; font-size: 11px; } /* Font size 11px */
+        .v-table { width: 100%; border-collapse: collapse; font-size: 11px; }
         .v-table th { border-bottom: 1px solid #ddd; text-align: left; padding: 5px 0; }
         .v-table td { padding: 3px 0; line-height: 1.2; }
         
@@ -75,6 +88,8 @@
 
         .v-list-container { flex-grow: 1; overflow: hidden; margin-bottom: 10px; }
 
+        .v-summary-section { border-top: 1px solid #000; padding-top: 8px; text-align: right; }
+
         .v-footer { 
             text-align: center; 
             margin-top: 10px; 
@@ -87,10 +102,16 @@
         }
 
         .v-qr { text-align: center; margin-top: 5px; }
-        .v-qr img { width: 100px; height: 100px; }
+        .v-qr img { width: 90px; height: 90px; }
 
-        .share-group { background: white; padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; border-top: 1px solid #eee; }
-        .btn-sh { padding: 12px; border: none; border-radius: 8px; color: white; font-weight: bold; cursor: pointer; text-align: center; font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        /* Share Buttons Outside Card */
+        .share-outer { width: 350px; margin-top: 15px; flex-shrink: 0; }
+        .share-group { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-sh { 
+            padding: 14px; border: none; border-radius: 10px; color: white; 
+            font-weight: bold; cursor: pointer; text-align: center; 
+            font-size: 0.9rem; display: flex; align-items: center; justify-content: center; gap: 8px; 
+        }
         .sh-tg { background: #0088cc; }
         .sh-vb { background: #7360f2; }
     </style>
@@ -127,7 +148,6 @@
 
     <section id="mainBill" style="display:none;">
         <table style="width:100%; font-size: 0.9rem; border-collapse: collapse; margin-bottom: 15px;" id="billTable"></table>
-        
         <div class="summary-box">
             <div style="display: flex; gap: 10px;">
                 <div class="form-group" style="flex:1"><label>ဝန်ဆောင်ခ (+)</label><input type="number" id="extra" value="0" oninput="calc()"></div>
@@ -135,7 +155,6 @@
             </div>
             <div class="grand-total">Total: <span id="gTotal">0</span> KS</div>
         </div>
-
         <div class="form-group" style="margin-top:15px;">
             <label>ငွေပေးချေမှုပုံစံ</label>
             <select id="pMethod">
@@ -144,16 +163,15 @@
                 <option value="WavePay">WavePay</option>
             </select>
         </div>
-
         <button onclick="openVoucher()" class="btn-add" style="background: var(--dark);"><i class="fas fa-file-invoice"></i> စလစ်ထုတ်မည်</button>
     </section>
 </div>
 
 <div id="vOverlay" class="overlay">
-    <div style="display: flex; flex-direction: column; align-items: center;">
+    <div style="display: flex; flex-direction: column; align-items: center; min-height: min-content;">
+        
         <div class="voucher-card">
             <span class="close-v" onclick="document.getElementById('vOverlay').style.display='none'">&times;</span>
-            
             <div id="vCapture">
                 <div class="v-header">
                     <img src="image_0.jpg" class="v-logo" alt="Logo">
@@ -175,124 +193,10 @@
                 </div>
 
                 <div style="margin-top: auto;">
-                    <div style="text-align:right; font-size:12px; border-top:1px solid #000; padding-top:8px; line-height: 1.6;">
-                        Subtotal: <span id="vs">0</span> KS<br>
-                        Extra: +<span id="ve">0</span> KS<br>
-                        Discount: -<span id="vdi">0</span> KS<br>
+                    <div class="v-summary-section">
+                        <span style="font-size: 11px;">Subtotal: <span id="vs">0</span> KS</span><br>
+                        <span style="font-size: 11px;">Extra: +<span id="ve">0</span> KS | Disc: -<span id="vdi">0</span> KS</span><br>
                         <strong style="font-size:16px; color:#FF7F00;">Total: <span id="vg">0</span> KS</strong>
                     </div>
 
-                    <div id="vqr" class="v-qr" style="display:none;">
-                        <img id="qi" src="">
-                    </div>
-
-                    <div class="v-footer">
-                        <p>မေခဆောင်၊ သမိုင်းကောလိပ်လမ်း၊ လှိုင်မြို့နယ်</p>
-                        <p>ဖုန်း - 09964563388</p>
-                        <p style="margin-top:4px; font-weight:bold; color:#d35400;">လာရောက်အားပေးမှုကို အထူးကျေးဇူးတင်ရှိပါသည်။</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="share-group">
-                <button onclick="shareOnlyApp('tg')" class="btn-sh sh-tg"><i class="fab fa-telegram"></i> Telegram</button>
-                <button onclick="shareOnlyApp('vb')" class="btn-sh sh-vb"><i class="fab fa-viber"></i> Viber</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    let cart = [];
-
-    function autoPrice() {
-        const val = document.getElementById('itemName').value;
-        const opts = document.getElementById('items').options;
-        for(let i=0; i<opts.length; i++) {
-            if(opts[i].value === val) {
-                document.getElementById('itemPrice').value = opts[i].getAttribute('data-price');
-                break;
-            }
-        }
-    }
-
-    function addToCart() {
-        const n = document.getElementById('itemName').value;
-        const p = parseInt(document.getElementById('itemPrice').value) || 0;
-        const q = parseInt(document.getElementById('itemQty').value) || 1;
-        if(!n || p <= 0) return;
-        cart.push({ n, p, q, t: p * q });
-        render();
-        document.getElementById('mainBill').style.display = 'block';
-        document.getElementById('itemName').value = '';
-        document.getElementById('itemPrice').value = '';
-        document.getElementById('itemQty').value = '1';
-    }
-
-    function render() {
-        const b = document.getElementById('billTable');
-        b.innerHTML = '';
-        cart.forEach((i, idx) => {
-            b.innerHTML += `<tr style="border-bottom:1px solid #eee"><td style="padding:10px 0"><b>${i.n}</b><br><small>${i.p} x ${i.q}</small></td><td style="text-align:right">${i.t.toLocaleString()}</td><td style="text-align:right; width:30px;"><i class="fas fa-trash" style="color:red; cursor:pointer" onclick="cart.splice(${idx},1);render()"></i></td></tr>`;
-        });
-        if(cart.length === 0) document.getElementById('mainBill').style.display = 'none';
-        calc();
-    }
-
-    function calc() {
-        let s = cart.reduce((x, i) => x + i.t, 0);
-        let e = parseInt(document.getElementById('extra').value) || 0;
-        let d = parseInt(document.getElementById('disc').value) || 0;
-        let g = s + e - d;
-        document.getElementById('gTotal').innerText = g.toLocaleString();
-        return { s, e, d, g };
-    }
-
-    async function openVoucher() {
-        const val = calc();
-        const pay = document.getElementById('pMethod').value;
-        const vNo = Date.now().toString().slice(-5);
-        document.getElementById('vn').innerText = "#" + vNo;
-        document.getElementById('vd').innerText = new Date().toLocaleDateString();
-        document.getElementById('vs').innerText = val.s.toLocaleString();
-        document.getElementById('ve').innerText = val.e.toLocaleString();
-        document.getElementById('vdi').innerText = val.d.toLocaleString();
-        document.getElementById('vg').innerText = val.g.toLocaleString();
-        
-        const vt = document.getElementById('vt');
-        vt.innerHTML = '';
-        cart.forEach(i => vt.innerHTML += `<tr><td>${i.n}</td><td style="text-align:center">${i.q}</td><td style="text-align:right">${i.t.toLocaleString()}</td></tr>`);
-
-        const vqr = document.getElementById('vqr');
-        if(pay !== 'Cash') {
-            vqr.style.display = 'block';
-            document.getElementById('qi').src = (pay === 'KPay') ? 'kpay-qr.jpg' : 'wave-qr.jpg';
-        } else { vqr.style.display = 'none'; }
-
-        document.getElementById('vOverlay').style.display = 'flex';
-
-        // Auto download image with Fixed Size
-        setTimeout(async () => {
-            const captureArea = document.getElementById('vCapture');
-            const canvas = await html2canvas(captureArea, { 
-                scale: 2,
-                width: 350,
-                height: 580
-            });
-            const link = document.createElement('a');
-            link.download = `Voucher_${vNo}.png`;
-            link.href = canvas.toDataURL("image/png");
-            link.click();
-        }, 800);
-    }
-
-    function shareOnlyApp(platform) {
-        if(platform === 'tg') {
-            window.open(`tg://msg`, '_blank');
-        } else {
-            window.open(`viber://forward`, '_blank');
-        }
-    }
-</script>
-</body>
-</html>
+                    <div id="vqr" class="v-
