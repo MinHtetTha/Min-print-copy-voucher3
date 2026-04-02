@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Min Copy & Print - POS</title>
+    <title>Min Copy & Print - Official POS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -12,76 +12,72 @@
         :root { --primary: #FF8C00; --dark: #2d3436; --bg: #fdfaf5; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
         body { background: var(--bg); padding-bottom: 50px; }
-        
-        header { background: var(--primary); color: white; text-align: center; padding: 25px; }
+        header { background: var(--primary); color: white; text-align: center; padding: 20px; }
         .container { max-width: 450px; margin: auto; padding: 15px; }
-        
-        /* Form Section */
+
+        /* Form Styling */
         section { background: white; padding: 20px; border-radius: 20px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
         .form-group { margin-bottom: 15px; }
         label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 6px; color: #555; }
-        input, select { width: 100%; padding: 14px; border: 1.5px solid #eee; border-radius: 12px; outline: none; font-size: 1.1rem; }
-        
-        .btn-add { background: var(--primary); color: white; border: none; padding: 16px; width: 100%; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        input, select { width: 100%; padding: 14px; border: 1.5px solid #eee; border-radius: 12px; outline: none; font-size: 1rem; }
+        .btn-add { background: var(--primary); color: white; border: none; padding: 16px; width: 100%; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
 
-        /* Bill Table (Card Style like Image) */
-        .bill-item { border-bottom: 1px solid #eee; padding: 15px 0; display: flex; justify-content: space-between; align-items: center; }
+        /* Card List Styling (As per your image) */
+        .bill-item { background: white; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
         .item-info b { font-size: 1.1rem; display: block; }
-        .item-info small { color: #777; }
-        .item-price-del { text-align: right; display: flex; align-items: center; gap: 15px; }
+        .item-info small { color: #666; font-size: 0.9rem; }
+        .item-right { text-align: right; display: flex; align-items: center; gap: 15px; }
         .trash-btn { color: #ff0000; cursor: pointer; font-size: 1.2rem; }
 
-        /* Total Section */
+        /* Summary Box */
         .summary-box { background: #fff9f2; padding: 20px; border-radius: 20px; border: 1px solid #ffd8a8; margin-top: 15px; }
-        .grand-total { font-size: 1.6rem; font-weight: bold; color: #d35400; text-align: center; margin-top: 15px; }
-        .btn-print { background: var(--dark); color: white; border: none; padding: 18px; width: 100%; border-radius: 15px; font-weight: bold; margin-top: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; }
+        .total-text { font-size: 1.6rem; font-weight: bold; color: #d35400; text-align: center; margin: 15px 0; }
+        .btn-print { background: var(--dark); color: white; border: none; padding: 18px; width: 100%; border-radius: 15px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
 
-        /* Voucher View */
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; overflow-y: auto; }
-        .voucher-card { background: white; width: 350px; border-radius: 15px; padding: 20px; position: relative; margin: 20px; }
+        /* Voucher View Overlay */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; justify-content: center; align-items: center; overflow-y: auto; }
+        .voucher-card { background: white; width: 350px; border-radius: 15px; padding: 20px; position: relative; }
         .close-v { position: absolute; top: 10px; right: 20px; font-size: 35px; color: #888; cursor: pointer; }
         
-        #vCapture { font-family: 'Courier New', monospace; color: #000; background: white; padding: 10px; }
-        .v-header { text-align: center; border-bottom: 2px dashed #FF8C00; padding-bottom: 10px; }
-        .v-logo { width: 70px; height: 70px; border-radius: 50%; border: 2px solid #FF8C00; margin-bottom: 5px; }
-        .v-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 15px 0; }
+        #vCapture { background: white; padding: 15px; width: 100%; }
+        .v-header { text-align: center; border-bottom: 2px dashed #FF8C00; padding-bottom: 15px; margin-bottom: 15px; }
+        .v-logo { width: 60px; height: 60px; border-radius: 50%; border: 1.5px solid #FF8C00; }
+        .v-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 15px 0; font-family: 'Courier New', monospace; }
         .v-summary { border-top: 1px solid #000; padding-top: 10px; text-align: right; line-height: 1.8; }
-        .qr-section { text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ccc; }
-        .qr-img { width: 120px; height: 120px; }
+        .qr-area { text-align: center; margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ccc; }
+        .qr-img { width: 130px; height: 130px; object-fit: contain; }
 
-        /* Share Modal */
+        /* Share Dialog */
         .share-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 30px; border-radius: 25px; z-index: 2000; width: 330px; text-align: center; box-shadow: 0 10px 60px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>Min Copy & Print</h1>
-</header>
+<header><h1>Min Copy & Print</h1></header>
 
 <div class="container">
     <section>
         <div class="form-group">
             <label>ပစ္စည်းအမျိုးအမည်</label>
-            <input type="text" id="itemName" list="items" placeholder="ရွေးပါ သို့မဟုတ် ရိုက်ပါ" oninput="autoPrice()">
+            <input type="text" id="itemName" list="items" placeholder="အမျိုးအမည်ရွေးပါ" oninput="autoPrice()">
             <datalist id="items">
                 <option value="A4 တစ်ဖက်" data-price="100">
                 <option value="A4 နှစ်ဖက်" data-price="200">
                 <option value="Legal တစ်ဖက်" data-price="200">
                 <option value="Legal နှစ်ဖက်" data-price="400">
                 <option value="Passport ပုံ (၁၂ ပုံ)" data-price="2500">
-                <option value="A4 ကျောကပ် (Color)" data-price="500">
+                <option value="ကျောကပ် Color" data-price="500">
             </datalist>
         </div>
         <div style="display:flex; gap:10px;">
             <div style="flex:2"><label>စျေးနှုန်း</label><input type="number" id="itemPrice" value="0"></div>
             <div style="flex:1"><label>ခုရေ</label><input type="number" id="itemQty" value="1"></div>
         </div>
-        <button class="btn-add" style="margin-top:20px;" onclick="addToCart()"><i class="fas fa-plus-circle"></i> စာရင်းထဲထည့်မည်</button>
+        <button class="btn-add" style="margin-top:15px;" onclick="addToCart()"><i class="fas fa-plus-circle"></i> စာရင်းထဲထည့်မည်</button>
     </section>
 
     <div id="mainBill" style="display:none;">
-        <section id="billContainer"></section>
+        <div id="billList"></div>
         
         <div class="summary-box">
             <div style="display: flex; gap: 10px;">
@@ -90,13 +86,13 @@
             </div>
             <div class="form-group" style="margin-top:15px;">
                 <label>ငွေပေးချေမှုပုံစံ</label>
-                <select id="pMethod" onchange="calc()">
+                <select id="pMethod">
                     <option value="Cash">Cash (ငွေသား)</option>
                     <option value="KPay">KPay</option>
                     <option value="WavePay">WavePay</option>
                 </select>
             </div>
-            <div class="grand-total">စုစုပေါင်း: <span id="gTotal">0</span> KS</div>
+            <div class="total-text">စုစုပေါင်း: <span id="gTotal">0</span> KS</div>
             <button onclick="generateVoucher()" class="btn-print"><i class="fas fa-file-invoice"></i> စလစ်ထုတ်မည်</button>
         </div>
     </div>
@@ -104,50 +100,52 @@
 
 <div id="vOverlay" class="overlay">
     <div class="voucher-card">
-        <span class="close-v" onclick="closeVoucher()">&times;</span>
+        <span class="close-v" onclick="openShareModal()">&times;</span>
         <div id="vCapture">
             <div class="v-header">
-                <img src="image_0.jpg" class="v-logo" alt="Logo" crossorigin="anonymous">
-                <h2 style="font-size: 20px;">MIN COPY & PRINT</h2>
-                <p style="font-size:11px;">လှိုင်မြို့နယ်။ ဖုန်း-09964563388</p>
+                <img src="image_0.jpg" class="v-logo" alt="Logo" onerror="this.style.display='none'">
+                <h2 style="font-size: 18px; margin-top:5px;">MIN COPY & PRINT</h2>
+                <p style="font-size:10px;">လှိုင်မြို့နယ်။ ဖုန်း-09964563388</p>
             </div>
-            <div style="font-size:12px; margin-top:10px; display:flex; justify-content: space-between;">
+            <div style="font-size:11px; display:flex; justify-content: space-between;">
                 <span id="vn"></span>
                 <span id="vd"></span>
             </div>
             <table class="v-table">
-                <thead><tr><th align="left">Item</th><th align="center">Qty</th><th align="right">Total</th></tr></thead>
+                <thead><tr style="border-bottom:1px solid #ddd;"><th align="left">Item</th><th align="center">Qty</th><th align="right">Total</th></tr></thead>
                 <tbody id="vt"></tbody>
             </table>
             <div class="v-summary">
                 Subtotal: <span id="vs">0</span> KS<br>
-                Service/Disc: <span id="ved">0</span> KS<br>
-                <strong style="font-size:17px; color:#d35400;">Total: <span id="vg">0</span> KS</strong><br>
+                Extra/Disc: <span id="ved">0</span> KS<br>
+                <strong style="font-size:16px; color:#d35400;">Total: <span id="vg">0</span> KS</strong><br>
                 Payment: <b id="vp"></b>
             </div>
-            <div id="vQRBox" class="qr-section" style="display:none;">
-                <p style="font-size:11px; margin-bottom:5px;">Scan to Pay</p>
-                <img id="vQRImg" src="" class="qr-img" crossorigin="anonymous">
+            <div id="vQRBox" class="qr-area" style="display:none;">
+                <p style="font-size:10px; margin-bottom:5px;">Scan to Pay</p>
+                <img id="vQRImg" src="" class="qr-img">
             </div>
-            <div style="text-align:center; margin-top:20px; border-top:1px dashed #ccc; padding-top:10px;">
-                <p style="font-size:12px; font-weight:bold;">အားပေးမှုကို အထူးကျေးဇူးတင်ရှိပါသည်။</p>
+            <div style="text-align:center; margin-top:15px; border-top:1px dashed #ccc; padding-top:10px;">
+                <p style="font-size:11px; font-weight:bold;">အားပေးမှုကို အထူးကျေးဇူးတင်ရှိပါသည်။</p>
             </div>
         </div>
     </div>
 </div>
 
 <div id="shareModal" class="share-modal">
-    <h3 style="margin-bottom:10px;">PDF ပေးပို့မည်လား?</h3>
-    <p style="font-size:13px; color:gray; margin-bottom:25px;">Viber/Telegram သို့ ပို့ရန် နှိပ်ပါ</p>
-    <button onclick="sharePDF()" class="btn-add"><i class="fas fa-share"></i> PDF ပို့မည်</button>
+    <h3 style="margin-bottom:10px;">PDF ဖိုင် ပေးပို့မည်လား?</h3>
+    <p style="font-size:13px; color:gray; margin-bottom:25px;">Viber သို့မဟုတ် Telegram သို့ ပို့နိုင်ပါသည်</p>
+    <button onclick="shareAsPDF()" class="btn-add"><i class="fas fa-file-pdf"></i> PDF အနေနဲ့ Share မည်</button>
     <button onclick="location.reload()" style="margin-top:15px; border:none; background:none; color:blue; cursor:pointer;">စာရင်းအသစ်ဖွင့်မည်</button>
 </div>
 
 <script>
     let cart = [];
-    let currentPDFBlob = null;
+    let currentPDFFile = null;
+    let voucherNo = "";
     const { jsPDF } = window.jspdf;
 
+    // ဈေးနှုန်း အလိုအလျောက် ပေါ်စေရန်
     function autoPrice() {
         const val = document.getElementById('itemName').value;
         const opts = document.getElementById('items').options;
@@ -172,16 +170,16 @@
     }
 
     function render() {
-        const container = document.getElementById('billContainer');
-        container.innerHTML = '';
+        const list = document.getElementById('billList');
+        list.innerHTML = '';
         cart.forEach((i, idx) => {
-            container.innerHTML += `
+            list.innerHTML += `
                 <div class="bill-item">
                     <div class="item-info">
                         <b>${i.n}</b>
                         <small>${i.p} x ${i.q}</small>
                     </div>
-                    <div class="item-price-del">
+                    <div class="item-right">
                         <span>${i.t.toLocaleString()}</span>
                         <i class="fas fa-trash trash-btn" onclick="removeItem(${idx})"></i>
                     </div>
@@ -208,9 +206,9 @@
     async function generateVoucher() {
         const res = calc();
         const pay = document.getElementById('pMethod').value;
-        const vNo = Date.now().toString().slice(-5);
+        voucherNo = Date.now().toString().slice(-5);
         
-        document.getElementById('vn').innerText = "#" + vNo;
+        document.getElementById('vn').innerText = "#" + voucherNo;
         document.getElementById('vd').innerText = new Date().toLocaleDateString();
         document.getElementById('vs').innerText = res.s.toLocaleString();
         document.getElementById('ved').innerText = (res.e - res.d).toLocaleString();
@@ -221,39 +219,56 @@
         vt.innerHTML = '';
         cart.forEach(i => vt.innerHTML += `<tr><td>${i.n}</td><td align="center">${i.q}</td><td align="right">${i.t.toLocaleString()}</td></tr>`);
 
+        // QR Code Logic
         const qrBox = document.getElementById('vQRBox');
         if(pay !== 'Cash') {
             qrBox.style.display = 'block';
-            document.getElementById('vQRImg').src = (pay === 'KPay') ? 'kpay-qr.jpg' : 'wave-qr.jpg';
+            document.getElementById('vQRImg').src = (pay === 'KPay') ? 'kpay.jpg' : 'wave.jpg';
         } else { qrBox.style.display = 'none'; }
 
         document.getElementById('vOverlay').style.display = 'flex';
 
-        // Auto Generate PDF for sharing
+        // Auto Generate PDF Background
         setTimeout(async () => {
             const captureArea = document.getElementById('vCapture');
-            const canvas = await html2canvas(captureArea, { scale: 2, useCORS: true });
+            const canvas = await html2canvas(captureArea, { scale: 3, useCORS: true });
             const imgData = canvas.toDataURL('image/png');
+            
             const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: [80, 200] });
             doc.addImage(imgData, 'PNG', 2, 2, 76, 0);
-            currentPDFBlob = doc.output('blob');
-            doc.save(`MinCopy_${vNo}.pdf`);
-        }, 1000);
+            
+            const pdfBlob = doc.output('blob');
+            currentPDFFile = new File([pdfBlob], `Voucher_${voucherNo}.pdf`, { type: 'application/pdf' });
+            
+            // Auto Save to Phone
+            doc.save(`Voucher_${voucherNo}.pdf`);
+        }, 1200);
     }
 
-    function closeVoucher() {
+    function openShareModal() {
         document.getElementById('vOverlay').style.display = 'none';
         document.getElementById('shareModal').style.display = 'block';
     }
 
-    async function sharePDF() {
-        if(!currentPDFBlob) return;
-        const file = new File([currentPDFBlob], "Voucher.pdf", { type: 'application/pdf' });
+    async function shareAsPDF() {
+        if (!currentPDFFile) {
+            alert("PDF ဖိုင် မဆွဲရသေးပါ။ ခဏစောင့်ပေးပါ။");
+            return;
+        }
+
         if (navigator.share) {
             try {
-                await navigator.share({ files: [file], title: 'Min Copy Voucher' });
-            } catch (err) { alert("Sharing failed"); }
-        } else { alert("Not supported on this browser."); }
+                await navigator.share({
+                    files: [currentPDFFile],
+                    title: 'Min Copy Voucher',
+                    text: 'လူကြီးမင်းအတွက် PDF စလစ် ပေးပို့လိုက်ပါသည်။'
+                });
+            } catch (err) {
+                console.log("Share failed:", err);
+            }
+        } else {
+            alert("Browser မှ Share စနစ်ကို Support မလုပ်ပါ။");
+        }
         document.getElementById('shareModal').style.display = 'none';
     }
 </script>
