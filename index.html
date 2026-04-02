@@ -1,3 +1,6 @@
+ဟုတ်ကဲ့ပါဗျာ။ အခုတစ်ခေါက်မှာတော့ အစ်ကိုဖြစ်စေချင်တဲ့အတိုင်း **Voucher Size ပုံသေ (350x580px)**၊ **Font 11px**၊ **ဖုန်းနံပါတ် အောက်ခြေပို့** တင်မကဘဲ **Share Button တွေကိုပါ Voucher Card ရဲ့ အပြင်ဘက်** မှာ အမြဲတမ်းပေါ်နေအောင် စနစ်တကျ ပြန်စီပေးထားပါတယ်။
+ပစ္စည်းတွေ ဘယ်လောက်များများ Share Button နှိပ်ရတာ အဆင်ပြေသွားပါပြီ။ ဒီ Code အပြည့်အစုံကို Copy ယူလိုက်ပါ-
+```html
 <!DOCTYPE html>
 <html lang="my">
 <head>
@@ -199,4 +202,120 @@
                         <strong style="font-size:16px; color:#FF7F00;">Total: <span id="vg">0</span> KS</strong>
                     </div>
 
-                    <div id="vqr" class="v-
+                    <div id="vqr" class="v-qr" style="display:none;">
+                        <img id="qi" src="">
+                    </div>
+
+                    <div class="v-footer">
+                        <p>မေခဆောင်၊ သမိုင်းကောလိပ်လမ်း၊ လှိုင်မြို့နယ်</p>
+                        <p>ဖုန်း - 09964563388</p>
+                        <p style="margin-top:4px; font-weight:bold; color:#d35400;">ကျေးဇူးတင်ရှိပါသည်။</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="share-outer">
+            <div class="share-group">
+                <button onclick="shareOnlyApp('tg')" class="btn-sh sh-tg"><i class="fab fa-telegram"></i> Telegram</button>
+                <button onclick="shareOnlyApp('vb')" class="btn-sh sh-vb"><i class="fab fa-viber"></i> Viber</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    let cart = [];
+
+    function autoPrice() {
+        const val = document.getElementById('itemName').value;
+        const opts = document.getElementById('items').options;
+        for(let i=0; i<opts.length; i++) {
+            if(opts[i].value === val) {
+                document.getElementById('itemPrice').value = opts[i].getAttribute('data-price');
+                break;
+            }
+        }
+    }
+
+    function addToCart() {
+        const n = document.getElementById('itemName').value;
+        const p = parseInt(document.getElementById('itemPrice').value) || 0;
+        const q = parseInt(document.getElementById('itemQty').value) || 1;
+        if(!n || p <= 0) return;
+        cart.push({ n, p, q, t: p * q });
+        render();
+        document.getElementById('mainBill').style.display = 'block';
+        document.getElementById('itemName').value = '';
+        document.getElementById('itemPrice').value = '';
+    }
+
+    function render() {
+        const b = document.getElementById('billTable');
+        b.innerHTML = '';
+        cart.forEach((i, idx) => {
+            b.innerHTML += `<tr style="border-bottom:1px solid #eee"><td style="padding:10px 0"><b>${i.n}</b><br><small>${i.p} x ${i.q}</small></td><td style="text-align:right">${i.t.toLocaleString()}</td><td style="text-align:right; width:30px;"><i class="fas fa-trash" style="color:red; cursor:pointer" onclick="cart.splice(${idx},1);render()"></i></td></tr>`;
+        });
+        if(cart.length === 0) document.getElementById('mainBill').style.display = 'none';
+        calc();
+    }
+
+    function calc() {
+        let s = cart.reduce((x, i) => x + i.t, 0);
+        let e = parseInt(document.getElementById('extra').value) || 0;
+        let d = parseInt(document.getElementById('disc').value) || 0;
+        let g = s + e - d;
+        document.getElementById('gTotal').innerText = g.toLocaleString();
+        return { s, e, d, g };
+    }
+
+    async function openVoucher() {
+        const val = calc();
+        const pay = document.getElementById('pMethod').value;
+        const vNo = Date.now().toString().slice(-5);
+        document.getElementById('vn').innerText = "#" + vNo;
+        document.getElementById('vd').innerText = new Date().toLocaleDateString();
+        document.getElementById('vs').innerText = val.s.toLocaleString();
+        document.getElementById('ve').innerText = val.e.toLocaleString();
+        document.getElementById('vdi').innerText = val.d.toLocaleString();
+        document.getElementById('vg').innerText = val.g.toLocaleString();
+        
+        const vt = document.getElementById('vt');
+        vt.innerHTML = '';
+        cart.forEach(i => vt.innerHTML += `<tr><td>${i.n}</td><td style="text-align:center">${i.q}</td><td style="text-align:right">${i.t.toLocaleString()}</td></tr>`);
+
+        const vqr = document.getElementById('vqr');
+        if(pay !== 'Cash') {
+            vqr.style.display = 'block';
+            document.getElementById('qi').src = (pay === 'KPay') ? 'kpay-qr.jpg' : 'wave-qr.jpg';
+        } else { vqr.style.display = 'none'; }
+
+        document.getElementById('vOverlay').style.display = 'flex';
+
+        setTimeout(async () => {
+            const captureArea = document.getElementById('vCapture');
+            const canvas = await html2canvas(captureArea, { 
+                scale: 2,
+                width: 350,
+                height: 580
+            });
+            const link = document.createElement('a');
+            link.download = `Voucher_${vNo}.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        }, 800);
+    }
+
+    function shareOnlyApp(platform) {
+        if(platform === 'tg') {
+            window.open(`tg://msg`, '_blank');
+        } else {
+            window.open(`viber://forward`, '_blank');
+        }
+    }
+</script>
+</body>
+</html>
+
+```
